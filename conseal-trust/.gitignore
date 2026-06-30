@@ -1,0 +1,51 @@
+# ── Node.js ──────────────────────────────────────────────────────────────────
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.log
+
+# ── Build outputs ────────────────────────────────────────────────────────────
+dist/
+dist-ssr/
+*.local
+
+# ── Python ───────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+*.pyd
+.Python
+.env
+.venv
+env/
+venv/
+*.egg-info/
+.eggs/
+
+# ── Python engine exports (generated PDFs) ───────────────────────────────────
+python-engine/exports/
+
+# ── Scratch / dev temp files ─────────────────────────────────────────────────
+scratch/
+
+# ── IDE / Editor ─────────────────────────────────────────────────────────────
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+Thumbs.db
+
+# ── Antigravity IDE agent config ─────────────────────────────────────────────
+.agents/
+
+# ── OS ───────────────────────────────────────────────────────────────────────
+.DS_Store
+desktop.ini
