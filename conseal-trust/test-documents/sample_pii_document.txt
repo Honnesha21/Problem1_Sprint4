@@ -1,0 +1,15 @@
+CONSEAL TEST REPORT — CONFIDENTIAL DATA
+---------------------------------------
+Author: Devashish Gupta
+Role: Chief Product Officer
+Company: Conseal Systems Private Limited
+
+Dear Team,
+We need to coordinate on the server migration. Please reach out to me at devashish@conseal.io or call +91 99887 76655.
+Here are the credential validation details:
+- Admin Aadhaar: 1122 3344 5566
+- Primary PAN: FYIPA9876K
+- Local Server IP: 192.168.1.150
+
+Best Regards,
+Devashish
