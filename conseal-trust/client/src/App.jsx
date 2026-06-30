@@ -411,47 +411,59 @@ function AuditTrailModal({ audit, onClose }) {
   );
 }
 
-// ── HOW TO USE MODAL (Guides the user on redaction workflow) ──────────────────
-function HowToUseModal({ onClose }) {
+// ── HOW TO USE PAGE (Dedicated guide view) ──────────────────────────────────
+function HowToUsePage({ onBack }) {
   return (
-    <div className="guided-overlay">
-      <div className="guided-modal audit-modal">
-        <div className="guided-header">
-          <div className="guided-step">How to Use Conseal</div>
-          <button className="guided-close" onClick={onClose}>✕</button>
-        </div>
-        <div className="audit-body guide-body" style={{ display: 'flex', flexDirection: 'column', gap: '16px', maxHeight: '70vh', overflowY: 'auto', paddingRight: '4px' }}>
-          <p className="audit-intro" style={{ margin: 0, fontWeight: 500 }}>
-            Conseal is a secure, local-first review pipeline for detecting, confirming, and resolving sensitive text identifiers before content is exported.
-          </p>
+    <div className="app app-landing" style={{ padding: '40px 20px', minHeight: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'flex-start' }}>
+      <div className="landing-container" style={{ maxWidth: '800px', width: '100%', background: 'var(--bg-panel)', padding: '40px', borderRadius: '12px', border: '1px solid var(--border)' }}>
+        <button onClick={onBack} style={{ background: 'transparent', border: 'none', color: 'var(--accent)', cursor: 'pointer', marginBottom: '20px', display: 'flex', alignItems: 'center', fontWeight: 600, padding: 0 }}>
+          <ArrowDownIcon size={16} style={{ transform: 'rotate(90deg)', marginRight: '8px' }} /> Back to Home
+        </button>
+        
+        <h1 style={{ marginBottom: '10px', fontSize: '2rem' }}>How to Use Conseal</h1>
+        <p style={{ color: 'var(--text-h)', marginBottom: '40px', fontSize: '1.1rem', lineHeight: '1.6' }}>
+          Conseal is a secure, local-first review pipeline for detecting, confirming, and resolving sensitive text identifiers before content is exported. Follow these simple steps to secure your documents.
+        </p>
 
-          <div className="guide-step-block" style={{ borderLeft: '3px solid var(--accent)', paddingLeft: '12px' }}>
-            <h4 style={{ margin: '0 0 4px', fontWeight: 700, color: 'var(--text-h)', fontSize: '0.92rem' }}>1. Upload Your Documents</h4>
-            <p style={{ margin: 0, fontSize: '0.84rem', lineHeight: '1.4' }}>Drag and drop one or multiple `.txt` or `.pdf` documents directly onto the upload area. Blank or image-only scanned PDFs are flagged automatically.</p>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '30px' }}>
+          <div className="guide-step-block" style={{ borderLeft: '4px solid var(--accent)', paddingLeft: '20px' }}>
+            <h3 style={{ margin: '0 0 10px', color: 'var(--text-h)', fontSize: '1.2rem' }}>1. Upload Your Documents</h3>
+            <p style={{ margin: 0, lineHeight: '1.6', color: 'var(--text-secondary)' }}>
+              Drag and drop one or multiple <code>.txt</code> or <code>.pdf</code> documents directly onto the upload area on the home page. Blank or image-only scanned PDFs will be flagged automatically.
+            </p>
           </div>
 
-          <div className="guide-step-block" style={{ borderLeft: '3px solid var(--accent)', paddingLeft: '12px' }}>
-            <h4 style={{ margin: '0 0 4px', fontWeight: 700, color: 'var(--text-h)', fontSize: '0.92rem' }}>2. Auto-PII Detection</h4>
-            <p style={{ margin: 0, fontSize: '0.84rem', lineHeight: '1.4' }}>The pipeline coordinates regex rules and local NLP services to automatically spot email addresses, phone numbers, Aadhaar, PAN cards, names, and physical addresses.</p>
+          <div className="guide-step-block" style={{ borderLeft: '4px solid var(--accent)', paddingLeft: '20px' }}>
+            <h3 style={{ margin: '0 0 10px', color: 'var(--text-h)', fontSize: '1.2rem' }}>2. Auto-PII Detection</h3>
+            <p style={{ margin: 0, lineHeight: '1.6', color: 'var(--text-secondary)' }}>
+              The pipeline coordinates custom regex rules and local NLP models to automatically spot high-risk entities like email addresses, phone numbers, Aadhaar, PAN cards, names, and physical locations.
+            </p>
           </div>
 
-          <div className="guide-step-block" style={{ borderLeft: '3px solid var(--accent)', paddingLeft: '12px' }}>
-            <h4 style={{ margin: '0 0 4px', fontWeight: 700, color: 'var(--text-h)', fontSize: '0.92rem' }}>3. Interactive Review & Decisions</h4>
-            <p style={{ margin: 0, fontSize: '0.84rem', lineHeight: '1.4' }}>Spans are highlighted by decision type. Select a badge in the text or click "Start Guided Review" to decide action items:</p>
-            <ul style={{ margin: '6px 0 0 16px', padding: 0, fontSize: '0.82rem', lineHeight: '1.4', listStyleType: 'disc' }}>
-              <li><strong>Redact:</strong> Swaps original content with black block maskings (<code>██████</code>).</li>
-              <li><strong>Anonymize:</strong> Replaces text with a structured PII label (e.g. <code>&lt;NAME&gt;</code>, <code>&lt;EMAIL&gt;</code>).</li>
-              <li><strong>Keep Visible:</strong> Confirms the entity is safe and does not redact it.</li>
+          <div className="guide-step-block" style={{ borderLeft: '4px solid var(--accent)', paddingLeft: '20px' }}>
+            <h3 style={{ margin: '0 0 10px', color: 'var(--text-h)', fontSize: '1.2rem' }}>3. Interactive Review & Decisions</h3>
+            <p style={{ margin: 0, lineHeight: '1.6', color: 'var(--text-secondary)' }}>
+              Detected items are highlighted by their status. Select a badge in the text or click <strong>"Start Guided Review"</strong> to resolve uncertain items:
+            </p>
+            <ul style={{ margin: '12px 0 0 24px', padding: 0, lineHeight: '1.6', color: 'var(--text-secondary)', listStyleType: 'disc' }}>
+              <li style={{ marginBottom: '8px' }}><strong>Redact:</strong> Swaps original content with black block maskings (<code>██████</code>). For PDFs, the underlying text layer is permanently deleted.</li>
+              <li style={{ marginBottom: '8px' }}><strong>Anonymize:</strong> Replaces text with a structured PII label (e.g., <code>&lt;NAME&gt;</code>, <code>&lt;EMAIL&gt;</code>).</li>
+              <li><strong>Keep Visible:</strong> Confirms the entity is safe and does not redact it in the final export.</li>
             </ul>
           </div>
 
-          <div className="guide-step-block" style={{ borderLeft: '3px solid var(--accent)', paddingLeft: '12px' }}>
-            <h4 style={{ margin: '0 0 4px', fontWeight: 700, color: 'var(--text-h)', fontSize: '0.92rem' }}>4. Download Clean Copies</h4>
-            <p style={{ margin: 0, fontSize: '0.84rem', lineHeight: '1.4' }}>Export your document in its original format. A cryptographic audit trail is rendered on the screen to certify verification compliance logs.</p>
+          <div className="guide-step-block" style={{ borderLeft: '4px solid var(--accent)', paddingLeft: '20px' }}>
+            <h3 style={{ margin: '0 0 10px', color: 'var(--text-h)', fontSize: '1.2rem' }}>4. Download Clean Copies</h3>
+            <p style={{ margin: 0, lineHeight: '1.6', color: 'var(--text-secondary)' }}>
+              Once all high-risk and uncertain items are reviewed, click "Download redacted" to export your secure document. A cryptographic audit trail will be rendered on the screen to certify compliance.
+            </p>
           </div>
         </div>
-        <div className="guided-actions" style={{ gridTemplateColumns: '1fr', marginTop: '8px' }}>
-          <button className="guided-btn guided-btn-redact" onClick={onClose}>Got it</button>
+
+        <div style={{ marginTop: '50px', display: 'flex', justifyContent: 'center' }}>
+          <button className="guided-btn guided-btn-redact" style={{ padding: '14px 32px', fontSize: '1.1rem' }} onClick={onBack}>
+            Get Started
+          </button>
         </div>
       </div>
     </div>
@@ -730,9 +742,30 @@ export default function App() {
   const activeDoc = documents.find(d => d.id === activeId);
   const overrides = (activeId && overridesByDoc[activeId]) || {};
 
+  if (showGuideModal) {
+    return <HowToUsePage onBack={() => setShowGuideModal(false)} />;
+  }
+
+  // Precompute per-doc readiness for tabs
+  const documentsWithReadiness = documents.map(d => {
+    const ov = overridesByDoc[d.id] || {};
+    const unc = d.spans.filter(s => (ov[s.id] || s.status) === 'uncertain').length;
+    const score = computeLiveReadiness(d.spans, ov, d.documentSummary.missedCount);
+    return { ...d, readinessScore: score, readinessReady: score >= 90 && unc === 0 };
+  });
+
   if (!activeDoc) {
     return (
       <div className="app app-landing">
+        {documents.length > 0 && (
+          <DocumentTabs
+            documents={documentsWithReadiness}
+            activeId={activeId}
+            onSwitch={(id) => { setActiveId(id); setSelectedSpan(null); }}
+            onClose={handleCloseDoc}
+            onAddClick={triggerFileUpload}
+          />
+        )}
         <div className="landing-container">
           <header className="landing-header">
             <div className="landing-badge">Private & Provider-Independent</div>
@@ -798,13 +831,7 @@ export default function App() {
   const liveScore = computeLiveReadiness(spans, overrides, missedCount);
   const isReady = liveScore >= 90 && uncertainCount === 0;
 
-  // Precompute per-doc readiness for tabs
-  const documentsWithReadiness = documents.map(d => {
-    const ov = overridesByDoc[d.id] || {};
-    const unc = d.spans.filter(s => (ov[s.id] || s.status) === 'uncertain').length;
-    const score = computeLiveReadiness(d.spans, ov, d.documentSummary.missedCount);
-    return { ...d, readinessScore: score, readinessReady: score >= 90 && unc === 0 };
-  });
+
 
   const setActiveOverrides = (updater) => {
     setOverridesByDoc(prev => ({
@@ -1065,9 +1092,7 @@ Privacy score       : ${liveScore}%
       {auditTrail && (
         <AuditTrailModal audit={auditTrail} onClose={() => setAuditTrail(null)} />
       )}
-      {showGuideModal && (
-        <HowToUseModal onClose={() => setShowGuideModal(false)} />
-      )}
+
 
       {/* Hidden file input for header & tab bar upload triggers */}
       <input
@@ -1084,7 +1109,7 @@ Privacy score       : ${liveScore}%
 
       <header className="workspace-header">
         <div className="header-top">
-          <div className="brand-group">
+          <div className="brand-group" onClick={() => setActiveId(null)} style={{ cursor: 'pointer' }} title="Return to home">
             <span className="brand-logo"><ShieldIcon size={22} style={{ color: 'var(--accent)' }} /></span>
             <h1>Conseal</h1>
             <span className="doc-name-badge">{activeDoc.name}</span>

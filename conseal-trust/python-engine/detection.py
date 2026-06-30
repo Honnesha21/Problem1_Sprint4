@@ -186,7 +186,7 @@ def detect_pii(text: str) -> list[dict]:
         # Override status based on confidence thresholds
         status = policy["status"]
         if candidate["confidence"] < 0.4:
-            status = "kept"
+            status = "uncertain" if policy["risk"] in ("HIGH", "CRITICAL") else "kept"
         elif candidate["confidence"] < 0.7 and status == "redacted":
             status = "uncertain"
 

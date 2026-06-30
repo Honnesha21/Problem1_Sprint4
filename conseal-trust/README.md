@@ -8,14 +8,15 @@
 ## Table of Contents
 
 1. [What is Conseal?](#what-is-conseal)
-2. [System Architecture](#system-architecture)
-3. [Project Structure](#project-structure)
-4. [Prerequisites](#prerequisites)
-5. [Installation](#installation)
-6. [Running the Application](#running-the-application)
-7. [How It Works — Pipeline Overview](#how-it-works--pipeline-overview)
-8. [API Reference](#api-reference)
-9. [Submission Writeup](#submission-writeup)
+2. [Video Explanation](#video-explanation)
+3. [System Architecture](#system-architecture)
+4. [Project Structure](#project-structure)
+5. [Prerequisites](#prerequisites)
+6. [Installation](#installation)
+7. [Running the Application](#running-the-application)
+8. [How It Works — Pipeline Overview](#how-it-works--pipeline-overview)
+9. [API Reference](#api-reference)
+10. [Submission Writeup](#submission-writeup)
 
 ---
 
@@ -26,6 +27,14 @@ Conseal is a full-stack document redaction pipeline that lets users upload sensi
 It supports:
 - **`.txt` files** — scanned with a deterministic regex + heuristic NER engine (Node.js)
 - **`.pdf` files** — text extracted via PyMuPDF, scanned with Microsoft Presidio NLP (Python/FastAPI), and exported as pixel-level bounding-box-redacted PDFs
+
+---
+
+## Video Explanation
+
+Watch the video explanation of the Conseal Document Redaction Pipeline:
+
+- [Video Explanation / Vidoe explanation](https://drive.google.com/file/d/1BUJmdyVw4IjJ0BSN4dvMte8s278JKIFE/view?usp=drive_link)
 
 ---
 

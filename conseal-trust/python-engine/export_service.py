@@ -133,6 +133,7 @@ def redact_pdf(
         page_word_data.append({"page_text": page_text, "char_map": char_map})
 
     # Process each span
+    unique_actions = {}
     for span in spans:
         span_id = span["id"]
         effective_status = overrides.get(span_id, span.get("status", "uncertain"))
@@ -141,9 +142,24 @@ def redact_pdf(
         if effective_status not in ("redacted", "anonymous"):
             continue
 
-        span_text = span["text"]
+        span_text = span["text"].strip()
         if not span_text:
             continue
+
+        # Keep track of unique text to redact/anonymize
+        if span_text not in unique_actions:
+            unique_actions[span_text] = {
+                "status": effective_status,
+                "type": span.get("type", "UNKNOWN"),
+                "span_id": span_id
+            }
+
+    for span_text, action in unique_actions.items():
+        effective_status = action["status"]
+        span_id = action["span_id"]
+        span_type = action["type"]
+
+        matches_found = 0
 
         # Search across all pages to find bounding boxes
         for page_index, offsets in enumerate(page_offsets):
@@ -153,11 +169,16 @@ def redact_pdf(
 
             # Use regex to find all instances of this span text on this page
             try:
-                pattern = re.compile(re.escape(span_text), re.IGNORECASE)
+                # Normalize spaces and allow any whitespace sequence to match
+                normalized_span = re.sub(r'\s+', ' ', span_text.strip())
+                pattern_str = re.escape(normalized_span).replace(r'\ ', r'\s+')
+                pattern_str = pattern_str.replace(' ', r'\s+')
+                pattern = re.compile(pattern_str, re.IGNORECASE)
             except re.error:
                 continue
 
             for match in pattern.finditer(page_text):
+                matches_found += 1
                 match_start = match.start()
                 match_end = match.end()
 
@@ -188,7 +209,7 @@ def redact_pdf(
 
                 elif effective_status == "anonymous":
                     # Draw white fill + overlay placeholder text
-                    label = _get_anon_label(span.get("type", "UNKNOWN"))
+                    label = _get_anon_label(span_type)
                     page.add_redact_annot(
                         merged_rect,
                         text=label,
@@ -196,6 +217,9 @@ def redact_pdf(
                         fill=(1, 1, 1),     # white background
                         text_color=(0.5, 0, 0.5),  # purple text
                     )
+
+        if matches_found == 0:
+            print(f"[WARNING] Export: Span '{span_text}' (ID: {span_id}) produced zero matches. Redaction failed for this span.")
 
     # Apply all redaction annotations — this permanently burns them in
     for page_index in range(len(doc)):

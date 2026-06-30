@@ -42,7 +42,7 @@ const RULES = [
     reason: 'Matches standard email format (RFC 5322). Emails directly identify individuals.' },
   { type: 'PHONE_NUMBER', pattern: /(\+91[\-\s]?)?[6-9]\d{4}[\-\s]?\d{5}/g, confidence: 0.97,
     reason: 'Matches Indian mobile number format. Phone numbers are direct contact identifiers.' },
-  { type: 'AADHAAR', pattern: /\b\d{4}\s\d{4}\s\d{4}\b/g, confidence: 0.99,
+  { type: 'AADHAAR', pattern: /\b\d{4}[\s-]?\d{4}[\s-]?\d{4}\b/g, confidence: 0.99,
     reason: 'Matches 12-digit Aadhaar format (groups of 4). Aadhaar is a government-issued personal ID.' },
   { type: 'PAN', pattern: /\b[A-Z]{5}[0-9]{4}[A-Z]\b/g, confidence: 0.99,
     reason: 'Matches Indian PAN card format (5 letters, 4 digits, 1 letter). PAN is a tax identity number.' },
@@ -57,6 +57,7 @@ const JOB_TITLES = ['CEO', 'CTO', 'CFO', 'COO', 'President', 'Director', 'Manage
 const ORG_SUFFIXES = /\b([A-Z][\w&.,]*(?:\s[A-Z][\w&.,]*)*\s(?:Inc|LLC|Ltd|Corp|Corporation|Company|Co)\.?)\b/g;
 const AMBIGUOUS_TOKENS = ['May', 'June', 'August', 'Jordan', 'Will', 'Mark', 'Grace', 'Rose', 'Dawn', 'Summer', 'April'];
 const TITLE_CASE_NAME = /\b[A-Z][a-z]+(?:\s[A-Z][a-z]+){1,2}\b/g;
+const SINGLE_NAME_RE = /\b[A-Z][a-z]{2,}\b/g;
 
 const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 const STOP_WORDS = ['the', 'and', 'but', 'or', 'a', 'an', 'in', 'on', 'at', 'to', 'for', 'with', 'by', 'of', 'from', 'this', 'that', 'these', 'those', 'is', 'are', 'was', 'were', 'be', 'been', 'being', 'have', 'has', 'had', 'do', 'does', 'did', 'will', 'would', 'shall', 'should', 'can', 'could', 'may', 'might', 'must', 'we', 'our', 'they', 'he', 'she', 'it', 'you', 'i', 'please', 'us', 'my', 'your', 'his', 'her', 'their'];
@@ -129,6 +130,16 @@ function detectHeuristicEntities(text) {
       text: m[0], start: m.index, end: m.index + m[0].length,
       type: 'PERSON', source: 'Heuristic TitleCase', confidence: 0.75,
       reason: 'Matches capitalized multi-word proper noun pattern'
+    });
+  }
+
+  // Single-token capitalized words (potential first names)
+  SINGLE_NAME_RE.lastIndex = 0;
+  while ((m = SINGLE_NAME_RE.exec(text)) !== null) {
+    candidates.push({
+      text: m[0], start: m.index, end: m.index + m[0].length,
+      type: 'PERSON', source: 'Heuristic SingleToken', confidence: 0.60,
+      reason: 'Matches capitalized single word (potential name)'
     });
   }
 
@@ -331,6 +342,7 @@ async function detectSpans(text) {
         if (ev.source === 'Microsoft Presidio') score += 60;
         if (ev.source === 'Heuristic Context') score += 30;
         if (ev.source === 'Heuristic TitleCase') score += 20;
+        if (ev.source === 'Heuristic SingleToken') score += 15;
         if (ev.source === 'Regex') score += 50;
       });
 
